@@ -1,0 +1,14 @@
+//
+// Created by PureRuiner on 6/22/2022.
+//
+
+#ifndef BANK_MANAGEMENT_SIMULATOR_DATABASE_H
+#define BANK_MANAGEMENT_SIMULATOR_DATABASE_H
+
+
+class Database {
+
+};
+
+
+#endif //BANK_MANAGEMENT_SIMULATOR_DATABASE_H

@@ -3,4 +3,6 @@ project(Bank_Management_Simulator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Bank_Management_Simulator main.cpp)
+set(Headers User.h Database.h)
+
+add_executable(Bank_Management_Simulator ${PROJECT_SOURCE_DIR}/ main.cpp User.cpp Database.cpp)
