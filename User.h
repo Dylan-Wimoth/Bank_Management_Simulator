@@ -5,37 +5,53 @@
 
 class User {
 public:
-    User(int checking = 0, int savings = 0){
+    User(){
         m_firstName = "firstName";
         m_lastName = "lastName";
+        m_password = hashString("1");
         m_email = "email";
-        m_ssn = "111-11-1111";
+        m_ssn = hashString("111111111");
+        m_checking = 0;
+        m_savings = 0;
     }
 
-    User(std::string firstName, std::string lastName, std::string email, std::string ssn, int checking = 0, int savings = 0){
-        m_firstName = firstName;
-        m_lastName = lastName;
-        m_email = email;
-        m_ssn = ssn;
+    User(std::string firstName, std::string lastName, std::string password, std::string email, std::string ssn){
+        m_firstName = std::move(firstName);
+        m_lastName = std::move(lastName);
+        m_password = hashString(password);
+        m_email = std::move(email);
+        m_ssn = hashString(ssn);
+        m_checking = 0;
+        m_savings = 0;
     }
 
+    //Getters
     std::string getfirstName() const {return m_firstName;};
     std::string getLastName() const {return m_lastName;};
+    int getPassword() const {return m_password;};
     std::string getEmail() const {return m_email;};
-    std::string getSsn() const {return m_ssn;} //return a hash of ssn
+    int getSsn() const {return m_ssn;} //return a hash of ssn
     int getChecking() const {return m_checking;};
     int getSavings() const {return m_savings;};
+    User* getInFront() {return m_inFront;};
+    User* getBehind() {return m_behind;};
 
+    //Overloaded << operator that prints first, last, checkings, savings
     friend std::ostream& operator<<(std::ostream& sout, const User &user);
+    int hashString(std::string);
 
 private:
     std::string m_firstName;
     std::string m_lastName;
+    int m_password;
     std::string m_email;
-    std::string m_ssn;
+    int m_ssn;
     int m_checking;
     int m_savings;
-};
 
+    //Used for Hashtable
+    User* m_inFront = nullptr;
+    User* m_behind = nullptr;
+};
 
 #endif //BANK_MANAGEMENT_SIMULATOR_USERS_H

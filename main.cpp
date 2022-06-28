@@ -1,9 +1,9 @@
 #include <iostream>
 #include "User.h"
-#include "Database.h"
+#include "HashTable.h"
+#include "Tester.h"
 
 int main() {
-    User personOne("dylan", "wilmoth", "random", "41231", 500, 500);
-
-    std::cout << personOne << std::endl;
+    Tester tester;
+    tester.runTests();
 }

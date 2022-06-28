@@ -3,6 +3,6 @@ project(Bank_Management_Simulator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(Headers User.h Database.h)
+set(Headers User.h HashTable.h Tester.h)
 
-add_executable(Bank_Management_Simulator ${PROJECT_SOURCE_DIR}/ main.cpp User.cpp Database.cpp)
+add_executable(Bank_Management_Simulator ${PROJECT_SOURCE_DIR}/ main.cpp User.cpp HashTable.cpp Tester.cpp)

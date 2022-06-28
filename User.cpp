@@ -6,3 +6,12 @@ std::ostream &operator<<(std::ostream &sout, const User &user) {
 
     return sout;
 }
+
+
+//Takes user string input and turns it into a hashed number
+//Important for ssn and passwords as they do not was to be stored
+//  as plain values
+int User::hashString(std::string input) {
+    std::hash<std::string> hash_obj;
+    return hash_obj(input);
+}
