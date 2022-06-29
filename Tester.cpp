@@ -2,8 +2,9 @@
 
 //Runs all tests
 void Tester::runTests() {
-    //assertTrue(testUserConstructors(), "User Constructors");
     assertTrue(testUserConstructors(), "User Constructors");
+    assertTrue(testHashTableConstructor(), "Hash Table Constructors");
+    assertTrue(samePassword(), "Inserting with Same Password");
 }
 
 //Displays test results
@@ -22,7 +23,7 @@ bool Tester::testUserConstructors() {
     User overloadedUser = User("Joe", "Williams", "random123", "Joe.Williams@joe.com", "222424532");
 
     //Default user check
-    if (defaultUser.getfirstName() != "firstName" || defaultUser.getLastName() != "lastName"){
+    if (defaultUser.getFirstName() != "firstName" || defaultUser.getLastName() != "lastName"){
         cout << "Default User Name Failed\n";
         return false;
     }
@@ -43,7 +44,7 @@ bool Tester::testUserConstructors() {
     }
 
     //overLoadedUser Check
-    if (overloadedUser.getfirstName() != "Joe" || overloadedUser.getLastName() != "Williams"){
+    if (overloadedUser.getFirstName() != "Joe" || overloadedUser.getLastName() != "Williams"){
         cout << "Over Loaded User Name Failed\n";
         return false;
     }
@@ -62,4 +63,53 @@ bool Tester::testUserConstructors() {
         cout << "Over Loaded User Email Failed\n";
         return false;
     }
+
+    return true;
+}
+
+//Makes sure constructors initialize nullptr user pointers
+bool Tester::testHashTableConstructor() {
+    HashTable hash1;
+    HashTable hash2(100);
+
+    for (int i = 0; i < hash1.getBuckets(); i++){
+        if (hash1.getTable()[i] != nullptr)
+            return false;
+    }
+
+    for (int i = 0; i < hash2.getBuckets(); i++){
+        if (hash2.getTable()[i] != nullptr)
+            return false;
+    }
+
+    return true;
+}
+
+bool Tester::samePassword() {
+    HashTable hash;
+
+    User* random = new User();
+    User* random2 = new User("Gary", "Wilkinson", "1", "email@random", "111111111");
+    User* random3 = new User();
+
+    hash.insertItem(random);
+    hash.insertItem(random2);
+    hash.insertItem(random3);
+
+    if (hash.getTable()[8] == random && hash.getTable()[8]->getNext() == random2 &&
+        hash.getTable()[8]->getNext()->getNext() == random3) {
+
+        delete random;
+        delete random2;
+        delete random3;
+        return true;
+    }
+
+    delete random;
+    delete random2;
+    delete random3;
+
+    return false;
+
+
 }

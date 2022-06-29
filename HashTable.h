@@ -1,25 +1,26 @@
 #ifndef BANK_MANAGEMENT_SIMULATOR_HASHTABLE_H
 #define BANK_MANAGEMENT_SIMULATOR_HASHTABLE_H
 
-#include<bits/stdc++.h>
+#include<vector>
+#include <bits/stdc++.h>
 #include "User.h"
 using namespace std;
 
-class HashTable
-{
-    int m_buckets;    // No. of buckets
-    list<User*> *table;
+class HashTable {
+    int m_buckets;
+    vector<User*> m_table;
 
 public:
-//    HashTable(int buckets);
-//    void insertItem(int x);
-//    void deleteItem(int key);
-//    void displayHash();
-//    int hashFunction(int x) {
-//        return (x % m_buckets);
-//    }
+    HashTable();
+    explicit HashTable(int buckets);
+    int getBuckets() const{return m_buckets;};
+    vector<User*> getTable() {return m_table;};
 
-
+    void insertItem(User*);
+    void deleteItem(int);
+    void displayHash();
+    static int closestPrime(int);
+    int findKey(int) const;
 };
 
 #endif //BANK_MANAGEMENT_SIMULATOR_HASHTABLE_H
