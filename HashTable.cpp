@@ -46,6 +46,48 @@ void HashTable::insertItem(User* customer){
 
         //insert node into chain
         temp->setNext(customer);
+        customer->setPrev(temp);
+    }
+}
+
+//Deletes a customer from the hashtable
+bool HashTable::deleteItem(User* customer) {
+    int key = findKey(customer->getPassword());
+
+    if (m_table[key] == nullptr){
+        return false;
+    //On correct index, now look for correct customer in chain
+    }else{
+        User* temp = m_table[key];
+
+        //Finds user in chain
+        while (temp != customer){
+            temp = temp->getNext();
+        }
+
+        //Only account in chain
+        if (!temp->getNext() && !temp->getPrev()){
+            delete temp;
+            m_table[key] = nullptr;
+        //First account in chain
+        } else if (!temp->getPrev() && temp->getNext()){
+            m_table[key] = temp->getNext();
+            delete temp;
+        //Account is in middle or end of chain
+        } else {
+            //Sets next node for the previous node to temp's next node
+            temp->getPrev()->setNext(temp->getNext());
+
+            //If there is a node after temp, set node's prev attribute
+            //  1 -> 2 -> 3 becomes 1 -> 3
+            if (temp->getPrev()->getNext() != nullptr){
+                temp->getPrev()->getNext()->setPrev(temp->getPrev());
+            }
+
+            delete temp;
+        }
+
+        return true;
     }
 }
 

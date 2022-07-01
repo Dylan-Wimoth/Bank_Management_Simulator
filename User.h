@@ -45,9 +45,8 @@ public:
     void setNext(User* next){m_next = next;};
     void setPrev(User* prev){m_prev = prev;};
 
-    //Overloaded << operator that prints first, last, checkings, savings
     friend std::ostream& operator<<(std::ostream& sout, const User &user);
-    int hashString(std::string);
+    static int hashString(std::string);
 
 private:
     std::string m_firstName;

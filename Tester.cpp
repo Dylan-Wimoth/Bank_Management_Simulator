@@ -5,6 +5,9 @@ void Tester::runTests() {
     assertTrue(testUserConstructors(), "User Constructors");
     assertTrue(testHashTableConstructor(), "Hash Table Constructors");
     assertTrue(samePassword(), "Inserting with Same Password");
+    assertTrue(deleteOnlyAccountInChain(), "Deleting Only Account in Chain");
+    assertTrue(deleteLastAccountInChain(), "Deleting Last Account in Chain");
+    assertTrue(deleteMiddleAccountInChain(), "Deleting Middle Account in Chain");
 }
 
 //Displays test results
@@ -85,6 +88,7 @@ bool Tester::testHashTableConstructor() {
     return true;
 }
 
+//Tests inserting users with same password. Ensures chaining works
 bool Tester::samePassword() {
     HashTable hash;
 
@@ -112,4 +116,92 @@ bool Tester::samePassword() {
     return false;
 
 
+}
+
+bool Tester::deleteOnlyAccountInChain() {
+    HashTable hash;
+
+    User* random = new User();
+    hash.insertItem(random);
+
+    //If nothing was deleted, test failed
+    if (!hash.deleteItem(random)){
+        delete random;
+        return false;
+    }
+
+    //If there are any nodes in the table, test failed
+    for (int i = 0; i < hash.getBuckets(); i++){
+        if (hash.getTable()[i] != nullptr){
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Tester::deleteLastAccountInChain() {
+    HashTable hash;
+
+    User* random = new User();
+    User* random2 = new User();
+
+    hash.insertItem(random);
+    hash.insertItem(random2);
+
+    //If user wasn't deleted, test failed
+    if (!hash.deleteItem(random2)){
+        delete random;
+        delete random2;
+        return false;
+    }
+
+    //If random's next is not nullptr, test failed
+    //  (user/user pointer wasn't deleted)
+    if (random->getNext()){
+        delete random;
+        return false;
+    }
+
+    delete random;
+    delete random2;
+    return true;
+
+}
+
+bool Tester::deleteMiddleAccountInChain() {
+    HashTable hash;
+
+    User* random = new User();
+    User* random2 = new User();
+    User* random3 = new User();
+
+    hash.insertItem(random);
+    hash.insertItem(random2);
+    hash.insertItem(random3);
+
+    //If user wasn't deleted, test failed
+    if (!hash.deleteItem(random2)){
+        delete random;
+        delete random2;
+        delete random3;
+        return false;
+    }
+
+    //First item in chain does not properly point to next item
+    if (random->getNext() != random3){
+        delete random;
+        delete random3;
+        return false;
+    }
+
+    //Last item in chain doesn't point to item before the one that
+    //  was deleted
+    if (random3->getPrev() != random || random3->getNext()){
+        delete random;
+        delete random3;
+        return false;
+    }
+
+    return true;
 }

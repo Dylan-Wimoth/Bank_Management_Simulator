@@ -17,7 +17,7 @@ public:
     vector<User*> getTable() {return m_table;};
 
     void insertItem(User*);
-    void deleteItem(int);
+    bool deleteItem(User*);
     void displayHash();
     static int closestPrime(int);
     int findKey(int) const;

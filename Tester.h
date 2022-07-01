@@ -14,6 +14,9 @@ public:
     static bool testUserConstructors();
     static bool testHashTableConstructor();
     static bool samePassword();
+    static bool deleteOnlyAccountInChain();
+    static bool deleteLastAccountInChain();
+    static bool deleteMiddleAccountInChain();
 };
 
 #endif //BANK_MANAGEMENT_SIMULATOR_TESTER_H

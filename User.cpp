@@ -1,5 +1,6 @@
 #include "User.h"
 
+//Displays user information in readable format
 std::ostream &operator<<(std::ostream &sout, const User &user) {
     sout << "First Name: " << user.getFirstName() << "\nLast Name: " << user.getLastName() << \
     "\nCheckins: " << user.getChecking() << "\nSavings: " << user.getSavings();
