@@ -5,25 +5,9 @@
 
 class User {
 public:
-    User(){
-        m_firstName = "firstName";
-        m_lastName = "lastName";
-        m_password = hashString("1");
-        m_email = "email";
-        m_ssn = hashString("111111111");
-        m_checking = 0;
-        m_savings = 0;
-    }
-
-    User(std::string firstName, std::string lastName, std::string password, std::string email, std::string ssn){
-        m_firstName = std::move(firstName);
-        m_lastName = std::move(lastName);
-        m_password = hashString(password);
-        m_email = std::move(email);
-        m_ssn = hashString(ssn);
-        m_checking = 0;
-        m_savings = 0;
-    }
+    User();
+    User(std::string firstName, std::string lastName, std::string password, std::string email, std::string ssn);
+    ~User();
 
     //Getters
     std::string getFirstName() const {return m_firstName;};

@@ -13,6 +13,8 @@ class HashTable {
 public:
     HashTable();
     explicit HashTable(int buckets);
+    ~HashTable();
+
     int getBuckets() const{return m_buckets;};
     vector<User*> getTable() {return m_table;};
 

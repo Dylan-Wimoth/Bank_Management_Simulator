@@ -3,6 +3,7 @@
 
 #include "User.h"
 #include "HashTable.h"
+#include "Simulator.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ public:
     static bool deleteOnlyAccountInChain();
     static bool deleteLastAccountInChain();
     static bool deleteMiddleAccountInChain();
+    static bool testPasswords();
 };
 
 #endif //BANK_MANAGEMENT_SIMULATOR_TESTER_H

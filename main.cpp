@@ -1,9 +1,13 @@
 #include <iostream>
-#include "User.h"
-#include "HashTable.h"
+#include "Simulator.h"
 #include "Tester.h"
 
 int main() {
-    Tester tester;
-    tester.runTests();
+    Tester::runTests();
+
+
+    Simulator simulation = Simulator();
+    cout << "Welcome to C++ Bank! How can I help you?\n";
+    simulation.mainMenu();
+    cout << "Thanks for stopping by!\n";
 }

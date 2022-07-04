@@ -8,6 +8,7 @@ void Tester::runTests() {
     assertTrue(deleteOnlyAccountInChain(), "Deleting Only Account in Chain");
     assertTrue(deleteLastAccountInChain(), "Deleting Last Account in Chain");
     assertTrue(deleteMiddleAccountInChain(), "Deleting Middle Account in Chain");
+    assertTrue(testPasswords(),"Password Requirements");
 }
 
 //Displays test results
@@ -204,4 +205,39 @@ bool Tester::deleteMiddleAccountInChain() {
     }
 
     return true;
+}
+
+bool Tester::testPasswords() {
+    Simulator testSim = Simulator();
+
+    if (testSim.passwordCheck("1234")){
+        return false;
+    }
+
+    //wrong length
+    if (testSim.passwordCheck("P#ssw0rd")){
+        return false;
+    }
+
+    //No uppercase
+    if (testSim.passwordCheck("p#ssw0rd1234")){
+        return false;
+    }
+
+    //No special char
+    if (testSim.passwordCheck("passw0rd1234")){
+        return false;
+    }
+
+    //No Lowercase letters
+    if (testSim.passwordCheck("PASSW0RD1234")){
+        return false;
+    }
+
+    //Follows parameters
+    if (testSim.passwordCheck("P#ssw0rd1234")){
+        return true;
+    }
+
+    return false;
 }

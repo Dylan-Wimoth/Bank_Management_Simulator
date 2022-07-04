@@ -19,6 +19,25 @@ HashTable::HashTable(int buckets){
     }
 }
 
+HashTable::~HashTable(){
+    for (int i = 0; i < m_buckets; i++){
+        //If there is a user at thar array
+        if (m_table[i] != nullptr){
+            User* curr = m_table[i];
+
+            //Keep deleting users in the chain
+            while(curr) {
+                User* next = curr->getNext();
+                delete curr;
+                curr = next;
+            }
+
+            //Set index back to nullptr
+            m_table[i] = nullptr;
+        }
+    }
+}
+
 //Makes password into a value that will fit in the array
 int HashTable::findKey(int hashedValue) const{
     //If the value is negative, make it positive
