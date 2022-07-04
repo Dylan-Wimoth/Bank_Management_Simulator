@@ -1,5 +1,7 @@
 #include "HashTable.h"
 
+#include <utility>
+
 HashTable::HashTable(){
     m_buckets = 51;
 
@@ -66,6 +68,51 @@ void HashTable::insertItem(User* customer){
         //insert node into chain
         temp->setNext(customer);
         customer->setPrev(temp);
+    }
+}
+
+
+bool HashTable::findItem(User* customer) const {
+    int key = findKey(customer->getPassword());
+
+    //No one is at index, throw error
+    if (m_table[key] == nullptr){
+        throw 1;
+    } else {
+        User* temp = m_table[key];
+
+        //Check each user in chain
+        while (temp){
+            if (temp == customer){
+                return true;
+            }
+            temp = temp->getNext();
+        }
+
+        //No user was found. Throw error
+        throw 1;
+    }
+}
+
+bool HashTable::findItem(std::string email, std::string password) const {
+    int hashedPassword = User::hashString(std::move(password));
+    int key = findKey(hashedPassword);
+
+    if (m_table[key] == nullptr){
+        throw 1;
+    } else {
+        User* temp = m_table[key];
+
+        //Check each user in chain
+        while (temp){
+            if (temp->getEmail() == email){
+                return true;
+            }
+            temp = temp->getNext();
+        }
+
+        //No user was found. Throw error
+        throw 1;
     }
 }
 

@@ -26,22 +26,33 @@ void Simulator::mainMenu() {
             login();
         } else if (userChoice == 2) {
             User *newUser = createUser();
-            //logIn(newUser);
+            login(newUser);
         }
     }
 }
 
-User *Simulator::login() {
-    return nullptr;
+//User when a user logs in with their information
+void Simulator::login() {
+
 }
 
-User *Simulator::login(User* ) {
-    return nullptr;
+//Used when a user creates a new account. Automatically logs in
+void Simulator::login(User* customer) {
+    try {
+        m_database->findItem(customer);
+    }
+
+    catch (int e){
+        cout << "ERROR: Account could not be found.\n";
+        return;
+    }
+
+    m_loggedInAs = customer;
 }
 
 //Creates user and adds them to database.
 //  Logs in after user is created
-User *Simulator::createUser() {
+User* Simulator::createUser() {
     std::string firstName, lastName, email, ssn, password, userResponse = "";
 
     do{
@@ -83,9 +94,12 @@ User *Simulator::createUser() {
         cin >> userResponse;
     }while(userResponse != "y" && userResponse != "Y");
 
+    //Creates user object
     User* newUser = new User(firstName,lastName,password,email,ssn);
+    //Inserts user into the database
     m_database->insertItem(newUser);
     cout << "Account Created!\n";
+    //Returns the user so simulation can log in
     return newUser;
 }
 
@@ -107,7 +121,7 @@ std::string Simulator::passwordCreator() {
 
 //Returns true if the password fits the requirements set by
 //  passwordCreator();
-bool Simulator::passwordCheck(std::string password) {
+bool Simulator::passwordCheck(const std::string& password) {
     bool upperCase,lowerCase,specialChar = false;
 
     for (char letter : password){

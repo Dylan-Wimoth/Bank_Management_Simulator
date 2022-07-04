@@ -10,12 +10,12 @@ public:
     ~Simulator();
 
     void mainMenu();
-    User* login();
-    User* login(User*);
+    void login();
+    void login(User*);
     User* createUser();
 
     std::string passwordCreator();
-    bool passwordCheck(std::string);
+    bool passwordCheck(const std::string&);
 private:
     User* m_loggedInAs;
     HashTable* m_database;

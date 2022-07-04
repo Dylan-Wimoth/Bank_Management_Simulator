@@ -7,6 +7,8 @@ void Tester::runTests() {
     assertTrue(samePassword(), "Inserting with Same Password");
     assertTrue(deleteOnlyAccountInChain(), "Deleting Only Account in Chain");
     assertTrue(deleteLastAccountInChain(), "Deleting Last Account in Chain");
+    assertTrue(findAccountTest(), "Finding Accounts");
+    assertTrue(findAccountWithEmailTest(), "Finding Accounts with Email and Password");
     assertTrue(deleteMiddleAccountInChain(), "Deleting Middle Account in Chain");
     assertTrue(testPasswords(),"Password Requirements");
 }
@@ -206,6 +208,108 @@ bool Tester::deleteMiddleAccountInChain() {
 
     return true;
 }
+
+
+bool Tester::findAccountTest() {
+    HashTable hash;
+
+    User* random = new User();
+    User* random2 = new User();
+    User* random3 = new User();
+    User* random4 = new User();
+
+    hash.insertItem(random);
+    hash.insertItem(random2);
+    hash.insertItem(random3);
+
+    //Make sure inserted items can be found
+    if (!hash.findItem(random)){
+        delete random;
+        delete random2;
+        delete random3;
+        delete random4;
+        return false;
+    }
+
+    if (!hash.findItem(random2)){
+        delete random;
+        delete random2;
+        delete random3;
+        delete random4;
+        return false;
+    }
+
+    if (!hash.findItem(random3)){
+        delete random;
+        delete random2;
+        delete random3;
+        delete random4;
+        return false;
+    }
+
+    //try to find an item that wasn't inserted
+    try {
+        hash.findItem(random4);
+    }
+
+    //If that item can't be found and an error is thrown
+    //  the function works correctly
+    catch (int e){
+        delete random;
+        delete random2;
+        delete random3;
+        delete random4;
+        return true;
+    }
+
+    //Error wasn't thrown
+    delete random;
+    delete random2;
+    delete random3;
+    delete random4;
+    return false;
+}
+
+
+bool Tester::findAccountWithEmailTest() {
+    HashTable hash;
+
+    User* random = new User();
+    User* random2 = new User("Gary", "Wilkinson", "12", "email@random", "111111111");
+
+    hash.insertItem(random);
+    hash.insertItem(random2);
+
+    //Find added accounts
+    if (!hash.findItem("email", "1")){
+        delete random;
+        delete random2;
+        return false;
+    }
+
+    if (!hash.findItem("email@random", "12")){
+        delete random;
+        delete random2;
+        return false;
+    }
+
+    //Look for account that doesn't exist
+    try{
+        hash.findItem("badEmail@email", "1234");
+    }
+
+    //Test passed if an error is thrown
+    catch (int e){
+        delete random;
+        delete random2;
+        return true;
+    }
+
+    delete random;
+    delete random2;
+    return false;
+}
+
 
 bool Tester::testPasswords() {
     Simulator testSim = Simulator();
