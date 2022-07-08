@@ -34,6 +34,8 @@ public:
 
     friend std::ostream& operator<<(std::ostream& sout, const User &user);
     static int hashString(std::string);
+    bool checkingCheck(int);
+    bool savingsCheck(int);
 
 private:
     std::string m_firstName;

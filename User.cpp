@@ -33,7 +33,7 @@ User::~User(){
 //Displays user information in readable format
 std::ostream &operator<<(std::ostream &sout, const User &user) {
     sout << "First Name: " << user.getFirstName() << "\nLast Name: " << user.getLastName() << \
-    "\nCheckins: " << user.getChecking() << "\nSavings: " << user.getSavings();
+    "\nEmail: " << user.getEmail() << "\nCheckins: $" << user.getChecking() << "\nSavings: $" << user.getSavings();
 
     return sout;
 }
@@ -44,4 +44,22 @@ std::ostream &operator<<(std::ostream &sout, const User &user) {
 int User::hashString(std::string input) {
     std::hash<std::string> hash_obj;
     return hash_obj(input);
+}
+
+//Makes sure withdraw amount is not greater than what's
+//  in the account
+bool User::checkingCheck(int withdrawAmount) {
+    if (withdrawAmount > m_checking)
+        return false;
+
+    return true;
+}
+
+//Makes sure withdraw amount is not greater than what's
+//  in the account
+bool User::savingsCheck(int withdrawAmount) {
+    if (withdrawAmount > m_savings)
+        return false;
+
+    return true;
 }

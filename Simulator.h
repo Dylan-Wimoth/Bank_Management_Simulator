@@ -14,7 +14,11 @@ public:
     void login();
     void login(User*);
     User* createUser();
+
     void forgotPassword();
+    void depositMoney();
+    void withdrawMoney();
+    void changeInformation();
 
     std::string passwordCreator();
     bool passwordCheck(const std::string&);

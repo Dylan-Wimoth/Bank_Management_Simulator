@@ -16,8 +16,8 @@ void Simulator::mainMenu() {
 
     while (userChoice != 4) {
         do {
-            cout << "1) Login\n2) New Customer\n3) Forgot Password\n4) Quit\n";
-            cout << "Choice: ";
+            cout << "\n1) Login\n2) New Customer\n3) Forgot Password\n4) Quit\n";
+            cout << "Choice:";
             cin >> userChoice;
             cout << endl;
         } while (userChoice < 1 || userChoice > 5);
@@ -36,7 +36,51 @@ void Simulator::mainMenu() {
 //If simulator is logged in as someone, display log in menu
 void Simulator::logInMenu() {
     if (m_loggedInAs){
-        cout << "You're logged in as " << *m_loggedInAs << endl;
+        int userChoice = -1;
+
+        cout << "\nWelcome, " << m_loggedInAs->getFirstName() << " " << m_loggedInAs->getLastName() << endl;
+        while (userChoice != 6 && userChoice != 5) {
+            do {
+                cout << "\nWhat would you like to do?\n";
+                cout << "1) Account Details\n";
+                cout << "2) Deposit Money\n";
+                cout << "3) Withdraw Money\n";
+                cout << "4) Update Personal Information\n";
+                cout << "5) Delete Account\n";
+                cout << "6) Log out\n";
+                cout << "Choice:";
+                cin >> userChoice;
+                cout << endl;
+            } while (userChoice < 1 || userChoice > 6);
+
+            if (userChoice == 1) {
+                cout << *m_loggedInAs << "\n";
+            } else if (userChoice == 2) {
+                depositMoney();
+            } else if (userChoice == 3) {
+                try{
+                    withdrawMoney();
+                }
+                catch (int e){
+                    cout << "ERROR " << e << ": Amount is too large\n";
+                }
+            } else if (userChoice == 4) {
+                changeInformation();
+            } else if (userChoice == 5) {
+                int deleteAccountChoice = -1;
+
+                do {
+                    cout << "Are you sure you want to delete your account?\n";
+                    cout << "1) Yes\n2) No\n";
+                    cin >> deleteAccountChoice;
+                } while (deleteAccountChoice != 1 && deleteAccountChoice != 2);
+
+                if (deleteAccountChoice == 1){
+                    m_database->deleteItem(m_loggedInAs);
+                    m_loggedInAs = nullptr;
+                }
+            }
+        }
     }
 
     m_loggedInAs = nullptr;
@@ -203,4 +247,94 @@ bool Simulator::passwordCheck(const std::string& password) {
     }
 
     return false;
+}
+
+void Simulator::depositMoney() {
+    int userChoice = -1;
+    int amount = 0;
+
+    //What account
+    do {
+     cout << "1) Checking\n2) Savings\n";
+     cin >> userChoice;
+    } while (userChoice < 1 || userChoice > 2);
+
+    //How much to be deposited
+    do {
+        cout << "How much?\n";
+        cin >> amount;
+    } while (amount < 0);
+
+    if (userChoice == 1)
+        m_loggedInAs->setChecking(m_loggedInAs->getChecking() + amount);
+    else
+        m_loggedInAs->setSavings(m_loggedInAs->getSavings() + amount);
+
+    cout << "$" << amount << " deposited!\n";
+}
+
+void Simulator::withdrawMoney() {
+    int userChoice = -1;
+    int amount = 0;
+
+    //What account
+    do {
+        cout << "1) Checking\n2) Savings\n";
+        cin >> userChoice;
+    } while (userChoice < 1 || userChoice > 2);
+
+    //How much to be withdrawn
+    do {
+        cout << "How much?\n";
+        cin >> amount;
+    } while (amount < 0);
+
+    if (userChoice == 1){
+        m_loggedInAs->checkingCheck(amount) ? m_loggedInAs->setChecking(m_loggedInAs->getChecking() - amount) : throw 2;
+    }
+    else{
+        m_loggedInAs->savingsCheck(amount) ? m_loggedInAs->setSavings(m_loggedInAs->getSavings() - amount) : throw 2;
+    }
+}
+
+void Simulator::changeInformation() {
+    int userChoice = -1;
+    std::string changedValue;
+
+    cout << "What would you like to change?\n";
+    do {
+        cout << "1) First name\n";
+        cout << "2) Last name\n";
+        cout << "3) Password\n";
+        cout << "4) Email\n";
+        cin >> userChoice;
+    } while (userChoice < 0 || userChoice > 4);
+
+    if (userChoice == 1){
+        cout << "Enter new first name:";
+        cin >> changedValue;
+        m_loggedInAs->setFirstName(changedValue);
+
+        cout << "First name changed.\n";
+    } else if (userChoice == 2){
+        cout << "Enter new last name:";
+        cin >> changedValue;
+        m_loggedInAs->setLastName(changedValue);
+
+        cout << "Last name changed.\n";
+    } else if (userChoice == 3){
+        m_database->displayHash();
+        changedValue = passwordCreator();
+        m_database->moveItem(m_loggedInAs, changedValue);
+        m_database->displayHash();
+
+        cout << "Password changed.\n";
+    } else{
+        cout << "Enter new email:";
+        cin >> changedValue;
+        m_loggedInAs->setEmail(changedValue);
+
+        cout << "Email changed.\n";
+    }
+
 }
