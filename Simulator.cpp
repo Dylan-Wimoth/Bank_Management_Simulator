@@ -27,27 +27,84 @@ void Simulator::mainMenu() {
         } else if (userChoice == 2) {
             User *newUser = createUser();
             login(newUser);
+        } else if (userChoice == 3) {
+            forgotPassword();
         }
     }
 }
 
-//User when a user logs in with their information
-void Simulator::login() {
+//If simulator is logged in as someone, display log in menu
+void Simulator::logInMenu() {
+    if (m_loggedInAs){
+        cout << "You're logged in as " << *m_loggedInAs << endl;
+    }
 
+    m_loggedInAs = nullptr;
+}
+
+//Used when a user logs in with their information
+//  goes to log in menu if they log in
+void Simulator::login() {
+    std::string email, password;
+    User* temp = nullptr;
+
+    cout << "Enter email:";
+    cin >> email;
+    cout << "Enter Password:";
+    cin >> password;
+
+    try{
+        temp = m_database->findItem(email, password);
+    }
+
+    catch (int e){
+        cout << "ERROR " << e << ": Account could not be found.\n";
+        return;
+    }
+
+    m_loggedInAs = temp;
+    logInMenu();
 }
 
 //Used when a user creates a new account. Automatically logs in
+// goes to log in menu
 void Simulator::login(User* customer) {
     try {
         m_database->findItem(customer);
     }
 
     catch (int e){
-        cout << "ERROR: Account could not be found.\n";
+        cout << "ERROR " << e << ": Account could not be found.\n";
         return;
     }
 
     m_loggedInAs = customer;
+    logInMenu();
+}
+
+//Determines if person is in system
+//  if so, they can change their password
+void Simulator::forgotPassword() {
+    std::string ssn, password;
+    User* customer = nullptr;
+
+    cout << "What is your ssn?";
+    cin >> ssn;
+
+    try {
+        customer = m_database->findItem(ssn);
+    }
+
+    //Account is not in database
+    catch (int e){
+        cout << "ERROR " << e << ": Account could not be found.\n";
+        return;
+    }
+
+    password = passwordCreator();
+    m_database->moveItem(customer, password);
+    cout << "Password changed.\n";
+
 }
 
 //Creates user and adds them to database.

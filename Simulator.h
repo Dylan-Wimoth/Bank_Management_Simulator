@@ -10,9 +10,11 @@ public:
     ~Simulator();
 
     void mainMenu();
+    void logInMenu();
     void login();
     void login(User*);
     User* createUser();
+    void forgotPassword();
 
     std::string passwordCreator();
     bool passwordCheck(const std::string&);

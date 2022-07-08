@@ -94,7 +94,35 @@ bool HashTable::findItem(User* customer) const {
     }
 }
 
-bool HashTable::findItem(std::string email, std::string password) const {
+//Determines if there is an account with a specific ssn
+// if not, return nullptr
+User *HashTable::findItem(std::string ssn) const {
+    int hashedSSN = User::hashString(std::move(ssn));
+    User* temp = nullptr;
+
+    //Goes through every account looking for matching account
+    for (int i = 0; i < m_buckets; i++){
+        if (m_table[i]){
+            temp = m_table[i];
+
+            //Checks user in each chain for a matching ssn
+            while (temp){
+                if (temp->getSsn() == hashedSSN){
+                    return temp;
+                }
+                temp = temp->getNext();
+            }
+
+        }
+    }
+
+    throw 1;
+}
+
+//Takes email and password in order to see if there is an account that matches
+//  if not, return nullptr.
+User* HashTable::findItem(std::string email, std::string password) const {
+    //Hashes the password then finds where it is in the array
     int hashedPassword = User::hashString(std::move(password));
     int key = findKey(hashedPassword);
 
@@ -106,7 +134,7 @@ bool HashTable::findItem(std::string email, std::string password) const {
         //Check each user in chain
         while (temp){
             if (temp->getEmail() == email){
-                return true;
+                return temp;
             }
             temp = temp->getNext();
         }
@@ -155,6 +183,45 @@ bool HashTable::deleteItem(User* customer) {
 
         return true;
     }
+}
+
+//Moves user to different spot in array
+bool HashTable::moveItem(User *customer, std::string password) {
+    //Finds current position of customer
+    int key = findKey(customer->getPassword());
+    User* temp = m_table[key];
+
+    //Finds user in chain
+    while (temp != customer){
+        temp = temp->getNext();
+    }
+
+    //Moves user in database
+    //Only account in chain
+    if (!temp->getNext() && !temp->getPrev()){
+        m_table[key] = nullptr;
+    //First account in chain
+    } else if (!temp->getPrev() && temp->getNext()){
+        m_table[key] = temp->getNext();
+    //Account is in middle or end of chain
+    } else {
+        //Sets next node for the previous node to temp's next node
+        temp->getPrev()->setNext(temp->getNext());
+
+        //If there is a node after temp, set node's prev attribute
+        //  1 -> 2 -> 3 becomes 1 -> 3
+        if (temp->getPrev()->getNext() != nullptr){
+            temp->getPrev()->getNext()->setPrev(temp->getPrev());
+        }
+    }
+
+    //Makes sure customer doesn't point to old chain
+    customer->setPrev(nullptr);
+    customer->setNext(nullptr);
+
+    //Sets the new password and inserts it back into the hash table
+    customer->setPassword(password);
+    insertItem(customer);
 }
 
 //Finds the closest prime number (less than) relative to what the user

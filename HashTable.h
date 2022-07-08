@@ -20,8 +20,10 @@ public:
 
     void insertItem(User*);
     bool deleteItem(User*);
+    bool moveItem(User*, std::string);
     bool findItem(User*) const;
-    bool findItem(std::string, std::string) const;
+    User* findItem(std::string) const;
+    User* findItem(std::string, std::string) const;
     void displayHash();
     static int closestPrime(int);
     int findKey(int) const;

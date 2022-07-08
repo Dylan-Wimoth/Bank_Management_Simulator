@@ -18,8 +18,10 @@ public:
     static bool deleteOnlyAccountInChain();
     static bool deleteLastAccountInChain();
     static bool deleteMiddleAccountInChain();
+    static bool movingAccounts();
     static bool findAccountTest();
     static bool findAccountWithEmailTest();
+    static bool findAccountWithSSN();
     static bool testPasswords();
 };
 

@@ -7,8 +7,10 @@ void Tester::runTests() {
     assertTrue(samePassword(), "Inserting with Same Password");
     assertTrue(deleteOnlyAccountInChain(), "Deleting Only Account in Chain");
     assertTrue(deleteLastAccountInChain(), "Deleting Last Account in Chain");
+    assertTrue(movingAccounts(), "Moving an account");
     assertTrue(findAccountTest(), "Finding Accounts");
     assertTrue(findAccountWithEmailTest(), "Finding Accounts with Email and Password");
+    assertTrue(findAccountWithSSN(), "Finding Accounts with SSN");
     assertTrue(deleteMiddleAccountInChain(), "Deleting Middle Account in Chain");
     assertTrue(testPasswords(),"Password Requirements");
 }
@@ -209,6 +211,50 @@ bool Tester::deleteMiddleAccountInChain() {
     return true;
 }
 
+bool Tester::movingAccounts() {
+    HashTable hash;
+
+    User* random = new User();
+    User* random2 = new User();
+    User* random3 = new User();
+
+    hash.insertItem(random);
+    hash.insertItem(random2);
+    hash.insertItem(random3);
+
+    hash.moveItem(random2, "newPassword");
+
+    //Makes sure the chain updates correctly
+    if (random3->getPrev() != random || random3->getNext()){
+        delete random;
+        delete random2;
+        delete random3;
+        return false;
+    }
+
+    //Makes sure that the user was moved to the correct spot
+    int key = hash.findKey(random2->getPassword());
+    if (hash.getTable()[key] != random2){
+        delete random;
+        delete random2;
+        delete random3;
+        return false;
+    }
+
+    //CHeck if account can still be found
+    if (!hash.findItem(random2)){
+        delete random;
+        delete random2;
+        delete random3;
+        return false;
+    }
+
+    delete random;
+    delete random2;
+    delete random3;
+    return true;
+}
+
 
 bool Tester::findAccountTest() {
     HashTable hash;
@@ -281,13 +327,13 @@ bool Tester::findAccountWithEmailTest() {
     hash.insertItem(random2);
 
     //Find added accounts
-    if (!hash.findItem("email", "1")){
+    if (hash.findItem("email", "1") != random){
         delete random;
         delete random2;
         return false;
     }
 
-    if (!hash.findItem("email@random", "12")){
+    if (hash.findItem("email@random", "12") != random2){
         delete random;
         delete random2;
         return false;
@@ -310,6 +356,45 @@ bool Tester::findAccountWithEmailTest() {
     return false;
 }
 
+
+bool Tester::findAccountWithSSN() {
+    HashTable hash;
+
+    User* random = new User();
+    User* random2 = new User("Gary", "Wilkinson", "12", "email@random", "123456789");
+
+    hash.insertItem(random);
+    hash.insertItem(random2);
+
+    //Find added accounts
+    if (hash.findItem("111111111") != random){
+        delete random;
+        delete random2;
+        return false;
+    }
+
+    if (hash.findItem("123456789") != random2){
+        delete random;
+        delete random2;
+        return false;
+    }
+
+    //Look for account that doesn't exist
+    try{
+        hash.findItem("1234");
+    }
+
+    //Test passed if an error is thrown
+    catch (int e){
+        delete random;
+        delete random2;
+        return true;
+    }
+
+    delete random;
+    delete random2;
+    return false;
+}
 
 bool Tester::testPasswords() {
     Simulator testSim = Simulator();

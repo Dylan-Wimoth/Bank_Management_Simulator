@@ -23,6 +23,9 @@ public:
     //setters
     void setFirstName(std::string firstName){m_firstName = firstName;};
     void setLastName(std::string lastName){m_lastName = lastName;};
+    void setPassword(std::string password){
+        m_password = hashString(password);
+    }
     void setEmail(std::string email){m_email = email;};
     void setChecking(int checking){m_checking = checking;};
     void setSavings(int savings){m_savings = savings;};
